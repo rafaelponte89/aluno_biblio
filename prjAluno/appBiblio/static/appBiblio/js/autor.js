@@ -7,9 +7,17 @@ function selecionar_autor(id_autor) {
     },
   });
 }
+
+function resetar_campos() {
+  $("#gravar").show();
+  $("#atualizar").hide();
+  $("#deletar").hide();
+  $("#id_nome_autor").val('');
+  $("#autor_selecionado").html('');
+  $("#pesquisa").html('');
+}
 function executar_autor() {
   // Autor
-
   $("#autor").click(() => {
     $("#pesquisa").html("");
     $("#livro").removeClass("bi-book text-bg-dark rounded-2");
@@ -49,19 +57,22 @@ function executar_autor() {
           });
         });
 
+       
         $("#atualizar").click(() => {
+          let id_autor = $("#atualizar").val();
           let nome = $("#id_nome_autor").val();
+
           $.get({
             url: "atualizarautor",
-            data: { id_autor: $("#atualizar").val(), nome: nome },
-            sucess: (response) => {
-              $("#mensagem").html(response);
-              // exibir_mensagem(response)
+            data: { id_autor: id_autor, nome: nome },
+            success: (response) => {
+               exibir_mensagem(response);
+               resetar_campos();
+             
             },
           });
         });
 
-      
 
         $("#deletar").click(() => {
           let id_autor = $("#deletar").val();
@@ -71,6 +82,7 @@ function executar_autor() {
             data: { id_autor: id_autor },
             success: (response) => {
                exibir_mensagem(response);
+               resetar_campos();
             },
           });
         });
@@ -82,7 +94,8 @@ function executar_autor() {
             url: "gravarautor",
             data: { nome: nome },
             success: (response) => {
-              alert(response);
+              exibir_mensagem(response);
+              resetar_campos();
             },
           });
         });

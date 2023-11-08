@@ -1,7 +1,27 @@
 from django.shortcuts import render, HttpResponse
 from .models import Autor, Livro, Aluno, FichaEmprestimo
+from django.db.models.deletion import RestrictedError
 # Create your views here.
 
+
+
+def padronizar_nome(nome):
+    """Eliminar sinais sonoros, acentuações e manter todas maiúsculas"""
+    acentuados = {'Á':'A','Ã':'A','Â':'A','É':'E','Ê':'E','Í':'I','Î':'I','Ó':'O','Õ':'O','Ô':'O','Ú':'U','Û':'U','Ç':'C','\'':'','\`':''}   
+    #acentuados = {'Á':'A','Ã':'A','Â':'A','É':'E','Ê':'E','Í':'I','Î':'I','Ó':'O','Õ':'O','Ô':'O','Ú':'U','Û':'U'}   
+
+    letra_nova = ''
+    for letra in nome:
+        if letra in acentuados.keys():
+            letra_nova = acentuados[letra]
+            nome = nome.replace(letra, letra_nova)
+            
+    return nome.rstrip(' ').lstrip(' ').upper()
+  
+def criarMensagem(texto, tipo):
+    
+    mensagem = HttpResponse(f"<div style='display:block;' class='alert alert-{tipo}' role='alert' >{texto} </div>")
+    return  mensagem
 
 def biblio(request):
     total_livros = ""
@@ -84,28 +104,34 @@ def exibir_autor(request):
 
 
 def gravar_autor(request):
-    nome = request.GET.get('nome')
-    print("Nome", nome)
-    autor = Autor(nome=nome)
-    autor.save()
-    return HttpResponse("Autor salvo com sucesso!")
+    try:
+        nome = padronizar_nome(request.GET.get('nome'))
+        autor = Autor(nome=nome)
+        autor.save()
+        return criarMensagem("Autor salvo com sucesso", "success")
+    except:
+        return criarMensagem("Aconteceu um erro", "danger")
 
 def atualizar_autor(request):
-    codigo_autor = request.GET.get("id_autor")
-    nome = request.GET.get("nome")
-    autor = Autor.objects.get(pk=codigo_autor)
-    autor.nome = nome
-    autor.save()
-  
-    return HttpResponse("Autor atualizado com Sucesso")
+    try:
+        codigo_autor = int(request.GET.get("id_autor"))
+        nome = padronizar_nome(request.GET.get("nome"))
+        autor = Autor.objects.get(pk=codigo_autor)
+        autor.nome = nome
+        autor.save()
+        return criarMensagem("Autor atualizado com Sucesso", "success")
+    except Exception:
+        return criarMensagem("Aconteceu um erro", "danger")
+    
 
 def deletar_autor(request):
-    codigo_autor = request.GET.get("id_autor")
-    autor = Autor.objects.get(pk=codigo_autor)
-    autor.delete()
-  
-    return HttpResponse("Autor deletado com Sucesso")
-
+    try:
+        codigo_autor = request.GET.get("id_autor")
+        autor = Autor.objects.get(pk=codigo_autor)
+        autor.delete()
+        return criarMensagem("Autor deletado com sucesso!", "success")
+    except RestrictedError:
+        return criarMensagem("Restrição ao Deletar, Autor Vinculado!", "danger")
   
 def selecionar_autor(request):
     codigo_autor = request.GET.get("id_autor")
@@ -235,7 +261,7 @@ def exibir_livro(request):
 
 
 def gravar_livro(request):
-    nome_livro = request.GET.get("nome")
+    nome_livro = padronizar_nome(request.GET.get("nome"))
     codigo_autor = request.GET.get("autor")
     exemplares = request.GET.get("exemplares")
 

@@ -24,15 +24,11 @@ from googleapiclient.http import MediaFileUpload
 import os
 from datetime import datetime
 import csv
-from .automatization import login_sed_2, acessar_caminho, buscar_dados
 
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
-gauth = GoogleAuth()
-#gauth.CommandLineAuth()
-gauth.LocalWebserverAuth()
-drive = GoogleDrive(gauth)
+
 
 REF_TAMANHO_NOME = 2
 REF_TAMANHO_RA = 7
@@ -175,23 +171,30 @@ def realizar_backup_v2(request):
 
     
 def realizar_backup(request):
-    SCOPES =["https://www.googleapis.com/auth/drive"]
-    creds = None
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json",SCOPES)
+    # alterado 08/11/2023
+    try:
+        gauth = GoogleAuth()
+        #gauth.CommandLineAuth()
+        gauth.LocalWebserverAuth()
+        drive = GoogleDrive(gauth)
+        SCOPES =["https://www.googleapis.com/auth/drive"]
+        creds = None
+        if os.path.exists("token.json"):
+            creds = Credentials.from_authorized_user_file("token.json",SCOPES)
     
     
     # Observação erro na atualização do token
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=0)
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+                creds = flow.run_local_server(port=0)
             
-    with open('token.json','w') as token:
-        token.write(creds.to_json())
-        
+        with open('token.json','w') as token:
+            token.write(creds.to_json())
+    except:
+        pass
     try:
         service = build("drive","v3", credentials=creds)
         
