@@ -29,14 +29,20 @@
   </head>
 
   <body id="corpo" onload="configuracoes()">
+    
     <div class="row">
-      <div id="acessibilidade" class="col-md-2 rounded-3 mt-2 position-fixed z-2">
+      <div
+        id="acessibilidade"
+        class="col-md-2 rounded-3 mt-2 position-fixed z-2"
+      >
         <button class="btn" onclick="aumentarLetra()">A+</button>
         <button class="btn" onclick="diminuirLetra()">A-</button>
         <button id="contraste" class="btn" value="0">
           <i id="iconeContraste" class="bi bi-lightbulb"></i>
         </button>
       </div>
+    
+     
     </div>
 
     <div id="Conteudo" class="container">
@@ -59,6 +65,8 @@
       type="text/javascript"
       src="{% static 'appAluno/js/contraste.js' %}"
     ></script>
+
+     
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--

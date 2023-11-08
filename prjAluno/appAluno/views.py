@@ -37,6 +37,9 @@ drive = GoogleDrive(gauth)
 REF_TAMANHO_NOME = 2
 REF_TAMANHO_RA = 7
 
+def controle(request):
+    
+    return render(request, "controle.html", {})
 # Códigos para testar a aplicação e/ou em desenvolvimento
 def rodarTeste():
     j = 0
@@ -235,7 +238,7 @@ def padronizar_nome(nome):
     for letra in nome:
         if letra in acentuados.keys():
             letra_nova = acentuados[letra]
-            nome = nome.replace(letra,letra_nova)
+            nome = nome.replace(letra, letra_nova)
             
     return nome.rstrip(' ').lstrip(' ')
 
@@ -303,12 +306,9 @@ def gravar(request):
                         mensagem = criarMensagem("Nome em Branco!!","warning")
                     elif tamanho_ra == 0: 
                         mensagem = criarMensagem("RA em Branco!!","warning")
-
-
-                    
+      
                 return mensagem
-                        
-                        
+                                                
     except Exception as err:
         print(err)
 

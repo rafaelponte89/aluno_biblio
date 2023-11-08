@@ -3,7 +3,7 @@ from .models import Aluno
 
 class frmAluno(forms.ModelForm):
     nome = forms.CharField(max_length=100, required=True)
-    ra = forms.CharField(max_length=20, required=True,widget=forms.NumberInput)
+    ra = forms.CharField(max_length=20, required=True, widget=forms.NumberInput)
 
     nome.widget.attrs["class"] = "form-control formulario"
     nome.widget.attrs["placeholder"] = "Nome do Aluno"

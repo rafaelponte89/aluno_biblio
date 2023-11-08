@@ -1,10 +1,11 @@
 from django.urls import path
 from .views import (index, gravar, buscar, recarregarTabela, atualizar,
-                    baixar_pdf, cancelarRM, buscarRM, 
+                    baixar_pdf, cancelarRM, buscarRM, controle,
                     buscar_dados_aluno, realizar_backup_v2, buscarRMCancelar, del_telefone)
 
 urlpatterns = [
-    path("", index, name="inicial"),  
+    path("", controle, name="controle"),
+    path("inicial", index, name="inicial"),  
     path("gravar", gravar, name="gravar"),
     path("buscar", buscar, name="buscar"),
     

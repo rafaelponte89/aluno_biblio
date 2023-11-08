@@ -14,6 +14,7 @@ function verificarContraste() {
   }*/
   
   let conteudo = document.getElementById("corpo");
+  
   let tabela = document.getElementById("tabela");
   let acessibilidade = document.getElementById("acessibilidade");
   let iconeLuz = document.getElementById("iconeContraste");
@@ -23,7 +24,7 @@ function verificarContraste() {
   let btnBkp = document.getElementById("bkp");
   let infoAluno = document.getElementById("aluno");
 
-  infoAluno.classList.toggle("bg-body-secondary");
+  //infoAluno.classList.toggle("bg-body-secondary");
   btnGravar.classList.toggle("btn-outline-dark");
   btnGravar.classList.toggle("btn-outline-warning");
   btnRelatorio.classList.toggle("btn-outline-dark");
